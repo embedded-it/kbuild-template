@@ -20,7 +20,7 @@
 # Will compile qconf as a C++ program, and menu as a C program.
 # They are linked as C++ code to the executable qconf
 
-__hostprogs := $(sort $(hostprogs-y) $(hostprogs-m))
+__hostprogs := $(sort $(hostprogs-y))
 
 # C code
 # Executables compiled from a single .c file
