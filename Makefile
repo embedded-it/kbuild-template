@@ -180,8 +180,6 @@ ifndef KBUILD_CHECKSRC
   KBUILD_CHECKSRC = 0
 endif
 
-# If building an external module we do not care about the all: rule
-# but instead _all depend on modules
 PHONY += all
 _all: all
 
@@ -260,9 +258,9 @@ NOSTDINC_FLAGS  =
 CFLAGS_KERNEL	=
 AFLAGS_KERNEL	=
 
-# Use LINUXINCLUDE when you must reference the include/ directory.
+# Use MYAPPINCLUDE when you must reference the include/ directory.
 # Needed to be compatible with the O= option
-LINUXINCLUDE    := \
+MYAPPINCLUDE    := \
 		$(if $(KBUILD_SRC), -I$(srctree)/include) \
 		-Iinclude -include include/generated/autoconf.h
 
@@ -286,7 +284,7 @@ export CPP AR NM STRIP OBJCOPY OBJDUMP
 export MAKE AWK PERL PYTHON
 export HOSTCXX HOSTCXXFLAGS CHECK CHECKFLAGS
 
-export KBUILD_CPPFLAGS NOSTDINC_FLAGS LINUXINCLUDE OBJCOPYFLAGS LDFLAGS
+export KBUILD_CPPFLAGS NOSTDINC_FLAGS MYAPPINCLUDE OBJCOPYFLAGS LDFLAGS
 export KBUILD_CFLAGS CFLAGS_KERNEL
 export KBUILD_AFLAGS AFLAGS_KERNEL
 export KBUILD_AFLAGS_KERNEL KBUILD_CFLAGS_KERNEL
@@ -354,7 +352,7 @@ ifneq ($(filter config %config,$(MAKECMDGOALS)),)
         endif
 endif
 
-# install and module_install need also be processed one by one
+# install need also be processed one by one
 ifneq ($(filter install,$(MAKECMDGOALS)),)
     mixed-targets := 1
 endif
@@ -431,7 +429,7 @@ endif # $(dot-config)
 
 # The all: target is the default when no target is given on the
 # command line.
-# This allow a user to issue only 'make' to build a kernel including modules
+# This allow a user to issue only 'make' to build the application
 # Defaults to myapp, but the arch makefile usually adds further targets
 all: myapp
 
@@ -574,8 +572,6 @@ myapp-objs	:= $(patsubst %,%/built-in.o, $(objs-y))
 myapp-libs	:= $(patsubst %,%/lib.a, $(libs-y))
 myapp-all	:= $(myapp-objs) $(myapp-libs)
 
-# Do modpost on a prelinked vmlinux. The finally linked vmlinux has
-# relevant sections renamed as per the linker script.
 quiet_cmd_myapp = LD      $@
       cmd_myapp = $(CC) $(LDFLAGS) -o $@                          \
       -Wl,--start-group $(myapp-libs) $(myapp-objs) -Wl,--end-group
@@ -599,10 +595,9 @@ $(myapp-dirs): prepare scripts
 
 
 
-# Things we need to do before we recursively start building the kernel
-# or the modules are listed in "prepare".
+# Things we need to do before we recursively start building the application
+# are listed in "prepare".
 # A multi level approach is used. prepareN is processed before prepareN-1.
-# archprepare is used in arch Makefiles and when processed asm symlink,
 # version.h and scripts_basic is processed / created.
 
 # Listed in dependency order
@@ -641,9 +636,9 @@ prepare: prepare0
 # needs to be updated, so this check is forced on all builds
 
 define filechk_version.h
-	(echo \#define LINUX_VERSION_CODE $(shell                         \
+	(echo \#define MYAPP_VERSION_CODE $(shell                         \
 	expr $(VERSION) \* 65536 + 0$(PATCHLEVEL) \* 256 + 0$(SUBLEVEL)); \
-	echo '#define KERNEL_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + (c))';)
+	echo '#define MYAPP_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + (c))';)
 endef
 
 $(version_h): $(srctree)/Makefile FORCE
@@ -659,7 +654,6 @@ headerdep:
 ###
 # Cleaning is done on three levels.
 # make clean     Delete most generated files
-#                Leave enough to build external modules
 # make mrproper  Delete the current configuration, and all generated files
 # make distclean Remove editor backup files, patch leftover files and the like
 
@@ -672,7 +666,7 @@ MRPROPER_DIRS  += include/config include/generated .tmp_objdiff
 MRPROPER_FILES += .config .config.old .version .old_version \
 		  cscope* GPATH GSYMS
 
-# clean - Delete most, but leave enough to build external modules
+# clean - Delete most
 #
 clean: rm-dirs  := $(CLEAN_DIRS)
 clean: rm-files := $(CLEAN_FILES)
@@ -687,8 +681,8 @@ clean: $(clean-dirs)
 	$(call cmd,rmfiles)
 	@find . $(RCS_FIND_IGNORE) \
 		\( -name '*.[oas]' -o -name '.*.cmd' \
-		-o -name '.*.d' -o -name '.*.tmp' -o -name '*.mod.c' \
-		-o -name modules.builtin -o -name '.tmp_*.o.*' \
+		-o -name '.*.d' -o -name '.*.tmp' \
+		-o -name '.tmp_*.o.*' \
 		-o -name '*.gcno' \) -type f -print | xargs rm -f
 
 # mrproper - Delete all generated files, including .config
@@ -726,8 +720,7 @@ clean := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.clean obj
 PHONY += help
 help:
 	@echo  'Cleaning targets:'
-	@echo  '  clean		  - Remove most generated files but keep the config and'
-	@echo  '                    enough build support to build external modules'
+	@echo  '  clean		  - Remove most generated files but keep the config'
 	@echo  '  mrproper	  - Remove all generated files + config + various backup files'
 	@echo  '  distclean	  - mrproper + remove editor backup and patch files'
 	@echo  ''
@@ -788,7 +781,6 @@ image_name:
 # Single targets are compatible with:
 # - build with mixed source and output
 # - build with separate output dir 'make O=...'
-# - external modules
 #
 #  target-dir => where to store outputfile
 #  build-dir  => directory in kernel source tree to use
