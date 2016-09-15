@@ -1,0 +1,42 @@
+config LOG_ENABLE
+	bool "Enable log output"
+	default y
+	help
+	  Say Y if you want to enable log output.
+	  If you say N here, those functions are not compiled.
+
+config LOG_INFO
+    bool "Enable info log messages"
+    default n
+    depends on LOG_ENABLE
+	help
+	  Say Y if you want to enable informational log message output.
+
+config LOG_WARN
+    bool "Enable warning log messages"
+    default n
+    depends on LOG_ENABLE
+	help
+	  Say Y if you want to enable warning log message output.
+
+config LOG_ERROR
+    bool "Enable error log messages"
+    default y
+    depends on LOG_ENABLE
+	help
+	  Say Y if you want to enable error log message output.
+
+config LOG_DEBUG
+    bool "Enable debug log messages"
+    default n
+    depends on LOG_ENABLE
+	help
+	  Say Y if you want to enable debug log message output.
+
+config LOG_TIMESTAMP
+	bool "Show a timestamp on log functions"
+	default y
+    depends on LOG_ENABLE
+	help
+	  Select this option to include a timestamp in the log output.
+

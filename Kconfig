@@ -1,0 +1,24 @@
+#
+# For a description of the syntax of this configuration file,
+# see Documentation/kbuild/kconfig-language.txt.
+#
+mainmenu "MYAPP Configuration"
+
+#config SRCARCH
+#	string
+#	option env="SRCARCH"
+
+#source "arch/$SRCARCH/Kconfig"
+
+config CROSS_COMPILE
+	string "Cross-compiler tool prefix"
+	help
+	  Same as running 'make CROSS_COMPILE=prefix-' but stored for
+	  default make runs in this application build directory.  You don't
+	  need to set this unless you want the configured application build
+	  directory to select the cross-compiler automatically.
+
+source "main/Kconfig"
+
+source "lib/Kconfig"
+
