@@ -88,9 +88,9 @@ own files.
 
 Currently the sources are located in the following directories:
 
-main/     -- Main application source
-lib/      -- A sample logging library, that will be compiled into a .a file
-include/  -- This directory holds all include files.
+- main/     -- Main application source
+- lib/      -- A sample logging library, that will be compiled into a .a file
+- include/  -- This directory holds all include files.
 
 All you need to to is to modify the following files, according to your needs:
 
