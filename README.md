@@ -66,6 +66,15 @@ First configure it, then just call make to build it.
 These steps generate a small executable `myapp`,
 which just print some messages to the console.
 
+You can save default configurations into the `configs/` directory.
+There are two sample default configurations one with all options
+enabled (`all-y-defconfig`) and one with no option enabled (`all-n-defconfig`)
+
+You can configure the project with a default configuration by calling e.g.
+
+        make all-y-defconfig
+
+        
 The full list of configuration and build targets is available by:
 
         make help
