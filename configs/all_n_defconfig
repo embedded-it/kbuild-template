@@ -2,6 +2,13 @@
 # Automatically generated file; DO NOT EDIT.
 # MYAPP Configuration
 #
+
+#
+# Compile-time checks and compiler options
+#
 CONFIG_CROSS_COMPILE=""
+CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE=y
+# CONFIG_CC_OPTIMIZE_FOR_SIZE is not set
+# CONFIG_DEBUG_INFO is not set
 # CONFIG_ENABLE_FOO_BAR is not set
 # CONFIG_LOG_ENABLE is not set
