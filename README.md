@@ -60,7 +60,7 @@ Building the sample application is quite simple.
 
 First configure it, then just call make to build it.
 
-        make menconfig # Create the ".config" file
+        make menuconfig # Create the ".config" file
         make           # Build the application
 
 These steps generate a small executable `myapp`,
